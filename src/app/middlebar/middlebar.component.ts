@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { FirebaseService } from '../firebase.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { FirebaseService } from '../firebase.service';
 })
 export class MiddlebarComponent implements OnInit {
 
+  @Output() selectedNote = new EventEmitter() ;
   items: Array<any>;
 
   constructor(
@@ -18,7 +19,22 @@ export class MiddlebarComponent implements OnInit {
     this.firebaseService.getNotes()
     .subscribe(result => {
       this.items = result;
-    })
+    });
+  }
+
+  getTitle(item) {
+    const body = item.payload.doc.data().body;
+
+    const getFirstLine = (text) => {
+      const lines = body.split('\n');
+      return lines.length ? lines[0] : false;
+    };
+
+    return  (body && getFirstLine(body)) || 'Untitled';
+  }
+
+  onSelect(item: any) {
+    this.selectedNote.emit(item.payload.doc);
   }
 
 }

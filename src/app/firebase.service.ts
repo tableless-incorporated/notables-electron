@@ -8,12 +8,12 @@ export class FirebaseService {
 
   constructor(public db: AngularFirestore) { }
 
-  getNotes(){
+  getNotes() {
     return this.db.collection('notes').snapshotChanges();
   }
 
   createNote(note) {
-    this.db.collection('notes').add({ note })
+    this.db.collection('notes').add({ note });
   }
 
   deleteNote(note) {

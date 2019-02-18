@@ -1,5 +1,7 @@
 <div class="middlebar">
   <ul>
-    <li *ngFor="let item of items">{{item.payload.doc.data().title ? item.payload.doc.data().title : 'Untitled'}}</li>
+    <li *ngFor="let item of items">
+      <button (click)="onSelect(item)">{{getTitle(item)}}</button>
+    </li>
   </ul>
 </div>

@@ -1,8 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="app" *ngIf="afAuth.user | async as user; else showLogin">
   <app-sidebar></app-sidebar>
-  <app-middlebar></app-middlebar>
-  <app-mainbar></app-mainbar>
+  <app-middlebar (selectedNote)="onSelectedNote($event)"></app-middlebar>
+  <app-mainbar [selectedNote]="selectedNote"></app-mainbar>
 </div>
 <div id="firebaseui-auth-container"></div>
 <ng-template #showLogin>

@@ -14,6 +14,8 @@ export class AppComponent {
   pendingRequest: Boolean = false;
   title = 'note';
 
+  selectedNote: EventEmitter<string>;
+
   constructor(public db: AngularFirestore, public afAuth: AngularFireAuth) {
     this.db.firestore.enablePersistence();
     this.ui = new firebaseui.auth.AuthUI(this.afAuth.auth);
@@ -21,6 +23,11 @@ export class AppComponent {
       this.pendingRequest = true;
       this.login();
     }
+  }
+
+  onSelectedNote($event) {
+    console.dir($event);
+    this.selectedNote = $event;
   }
 
   login() {

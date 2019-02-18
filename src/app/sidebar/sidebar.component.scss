@@ -1,0 +1,16 @@
+.sidebar {
+  background-color: #333E45;
+  flex: 1 1 165px;
+  min-width: 165px;
+  max-width: 350px;
+}
+
+.sidebar .tag {
+  justify-content: left;
+  color: #fdfdfd;
+  background-color: transparent;
+}
+
+#sidebar .tag {
+    margin-bottom: 5px !important;
+}

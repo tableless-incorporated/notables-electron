@@ -1,0 +1,14 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="app" *ngIf="afAuth.user | async as user; else showLogin">
+  <app-sidebar></app-sidebar>
+  <app-middlebar></app-middlebar>
+  <app-mainbar></app-mainbar>
+</div>
+<div id="firebaseui-auth-container"></div>
+<ng-template #showLogin>
+  <div *ngIf="!pendingRequest" style="text-align:center">
+    <p>C'est mieux si on est loggé</p>
+    <button mat-raised-button color="primary"  (click)="login()">Login with Google</button>
+  </div>
+</ng-template>
+<router-outlet></router-outlet>

@@ -1,0 +1,5 @@
+<div class="middlebar">
+  <ul>
+    <li *ngFor="let item of items">{{item.payload.doc.data().title ? item.payload.doc.data().title : 'Untitled'}}</li>
+  </ul>
+</div>

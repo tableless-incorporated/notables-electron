@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MiddlebarComponent } from './middlebar/middlebar.component';
 import { MainbarComponent } from './mainbar/mainbar.component';
+import { NgxMdModule } from 'ngx-md';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MainbarComponent } from './mainbar/mainbar.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    NgxMdModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

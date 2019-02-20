@@ -11,13 +11,15 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { MiddlebarComponent } from './middlebar/middlebar.component';
 import { MainbarComponent } from './mainbar/mainbar.component';
 import { NgxMdModule } from 'ngx-md';
+import { Md2txtPipe } from './md2txt.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
     MiddlebarComponent,
-    MainbarComponent
+    MainbarComponent,
+    Md2txtPipe
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

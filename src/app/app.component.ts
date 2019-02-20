@@ -11,10 +11,10 @@ import { auth } from 'firebase';
 })
 export class AppComponent {
   ui: firebaseui.auth.AuthUI;
-  pendingRequest: Boolean = false;
+  pendingRequest = false;
   title = 'note';
 
-  selectedNote: EventEmitter<string>;
+  selectedNote: any;
 
   constructor(public db: AngularFirestore, public afAuth: AngularFireAuth) {
     this.db.firestore.enablePersistence();
@@ -40,14 +40,14 @@ export class AppComponent {
         },
       ],
       callbacks: {
-        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        signInSuccessWithAuthResult(authResult, redirectUrl) {
           // User successfully signed in.
           // Return type determines whether we continue the redirect automatically
           // or whether we leave that to developer to handle.
           return false;
         },
       }
-    }
+    };
     this.ui.start('#firebaseui-auth-container', uiConfig);
     /*
         this.afAuth.auth.signInWithEmailAndPassword('nicolas@thomasson.fr', "123456");*/

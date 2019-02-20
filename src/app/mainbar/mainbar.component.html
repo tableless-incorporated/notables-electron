@@ -1,6 +1,5 @@
 <div class="mainbar">
-  main works!
-
+  <button (click)="isEdit = !isEdit">Edit mode</button>
   <button (click)="onCreate()">+</button>
 
   <ngx-md *ngIf="!isEdit && noteRef && note && note.body" [data]="note.body"></ngx-md>

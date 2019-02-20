@@ -3,6 +3,8 @@
 
   <button (click)="onCreate()">+</button>
 
+  <ngx-md *ngIf="!isEdit && noteRef && note && note.body" [data]="note.body"></ngx-md>
+
   <div *ngIf="isEdit && noteRef">
     <textarea [(ngModel)]="note.body"></textarea>
     <button (click)="onSave()">save</button>

@@ -26,8 +26,8 @@ export class MiddlebarComponent implements OnInit {
     const body = item.payload.doc.data().body;
 
     const getFirstLine = (text) => {
-      const lines = body.split('\n');
-      return lines.length ? lines[0] : false;
+      const line = body.split('\n').find(l => l.trim().length);
+      return line;
     };
 
     return  (body && getFirstLine(body)) || 'Untitled';

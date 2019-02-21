@@ -15,7 +15,7 @@ export class SidebarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.firebaseService.getNotes()
+    this.firebaseService.getNotes$()
     .subscribe(result => {
       this.items = result;
     })

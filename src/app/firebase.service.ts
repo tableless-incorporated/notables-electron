@@ -8,7 +8,7 @@ export class FirebaseService {
 
   constructor(public db: AngularFirestore) { }
 
-  getNotes() {
+  getNotes$(tags: Tag[] = []) {
     return this.db.collection('notes').snapshotChanges();
   }
 

@@ -27,6 +27,10 @@ export class Note {
   static fromRawData(data: QueryDocumentSnapshot<{}> ) {
     return new Note({id: data.id, body: '', tags: [], ...data.data()});
   }
+
+  get raw() {
+    return { body: this.body, tags: this.tags };
+  }
 }
 
 @Injectable({
@@ -45,10 +49,14 @@ export class FirebaseService {
   }
 
   createNote(note) {
-    this.db.collection('notes').add({ note });
+    return this.db.collection('notes').add(note.raw);
   }
 
   deleteNote(note) {
-    this.db.collection('notes').doc(note.id).delete();
+    return this.db.collection('notes').doc(note.id).delete();
+  }
+
+  updateNote(note) {
+    return this.db.collection('notes').doc(note.id).update(note.raw);
   }
 }

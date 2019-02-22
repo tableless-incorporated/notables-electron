@@ -11,16 +11,16 @@ export class MainbarComponent implements OnChanges {
   @Input() selectedNote: any;
 
   isEdit = false;
-  note: Note = {
-    id: null,
-    body: ''
-  };
+  isNote = false;
+  note: Note = new Note();
 
   constructor(public db: AngularFirestore) { }
 
   currentNoteChanged(newNote: Note) {
     if (newNote) {
       this.note = newNote;
+      this.noteTags = newNote.tags;
+      this.isNote = true;
     }
   }
 
@@ -38,6 +38,7 @@ export class MainbarComponent implements OnChanges {
   }
 
   onSave() {
+    if (!this.note.id) { return; }
     const note = this.db.doc<{body: string}>(`notes/${this.note.id}`);
     note.update({ body: this.note.body });
   }

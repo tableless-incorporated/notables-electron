@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FirebaseService } from '../firebase.service';
+import { FirebaseService, Note } from '../firebase.service';
+import { Observable } from 'rxjs';
+import { map as rmap, uniq, reduce, compose, pluck , keys, flatten, lensPath, set} from 'ramda';
+import { map } from 'rxjs/operators';
+import { TreeNode } from './treenode.component';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,16 +12,37 @@ import { FirebaseService } from '../firebase.service';
 })
 export class SidebarComponent implements OnInit {
 
-  items: Array<any>;
+  items$: Observable<TreeNode>;
 
   constructor(
     public firebaseService: FirebaseService
   ) { }
 
   ngOnInit() {
-    this.firebaseService.getNotes$()
-    .subscribe(result => {
-      this.items = result;
-    })
+    this.items$ = this.firebaseService.getNotes$().pipe(
+      map( (listNote: Note[]): TreeNode => {
+        return compose(
+          list => {
+            const list2tree = tags => {
+              return compose(
+                rmap((name: string) => ({
+                  name,
+                  children: list2tree(tags[name])
+                })),
+                keys,
+              )(tags);
+            };
+            return {
+              children: list2tree(list)
+            };
+          },
+          reduce((tags, tag) => set(lensPath(tag.split('/')), {}, tags), {}),
+          uniq,
+          flatten,
+          pluck('tags'),
+        )(listNote);
+      })
+    );
   }
 }
+

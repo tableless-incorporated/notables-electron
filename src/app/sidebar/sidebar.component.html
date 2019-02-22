@@ -5,7 +5,7 @@
     <li></li>
   </ul>
   <span class='tag'>Tags</span>
-  <ul>
-    <li></li>
-  </ul>
+
+  <app-tree-node *ngIf="(this.items$|async) as tags" [node]="tags"></app-tree-node>
+
 </div>

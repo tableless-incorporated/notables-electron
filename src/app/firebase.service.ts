@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction} from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 type TagPath = string[];

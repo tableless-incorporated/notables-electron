@@ -26,7 +26,6 @@ export class AppComponent {
   }
 
   onSelectedNote($event) {
-    console.dir($event);
     this.selectedNote = $event;
   }
 

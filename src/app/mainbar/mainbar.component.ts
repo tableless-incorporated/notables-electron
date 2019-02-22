@@ -1,6 +1,8 @@
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Note } from '../firebase.service';
+import { Observable, of, Subject, BehaviorSubject, from } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mainbar',
@@ -13,6 +15,16 @@ export class MainbarComponent implements OnChanges {
   isEdit = false;
   isNote = false;
   note: Note = new Note();
+
+  noteTags: string[] = [];
+
+  public requestAutocompleteItems = (text: string): Observable<string[]> => {
+    return of(this.note.taglist);
+  }
+
+  onTextChange($event: string) {
+    console.dir($event);
+  }
 
   constructor(public db: AngularFirestore) { }
 
@@ -39,8 +51,8 @@ export class MainbarComponent implements OnChanges {
 
   onSave() {
     if (!this.note.id) { return; }
-    const note = this.db.doc<{body: string}>(`notes/${this.note.id}`);
-    note.update({ body: this.note.body });
+    const doc = this.db.doc<{body: string}>(`notes/${this.note.id}`);
+    doc.update({ body: this.note.body });
   }
 
   onDelete() {

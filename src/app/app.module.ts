@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { TreeNodeComponent } from './sidebar/treenode.component';
 import { MiddlebarComponent } from './middlebar/middlebar.component';
 import { MainbarComponent } from './mainbar/mainbar.component';
 import { CustomPipesModule } from 'ngx-custom-pipes';
@@ -20,7 +21,8 @@ import { Md2txtPipe } from './md2txt.pipe';
     SidebarComponent,
     MiddlebarComponent,
     MainbarComponent,
-    Md2txtPipe
+    Md2txtPipe,
+    TreeNodeComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

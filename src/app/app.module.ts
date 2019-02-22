@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -14,6 +14,8 @@ import { MainbarComponent } from './mainbar/mainbar.component';
 import { CustomPipesModule } from 'ngx-custom-pipes';
 import { NgxMdModule } from 'ngx-md';
 import { Md2txtPipe } from './md2txt.pipe';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TagInputModule } from 'ngx-chips';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,9 @@ import { Md2txtPipe } from './md2txt.pipe';
     FormsModule,
     NgxMdModule.forRoot(),
     CustomPipesModule,
+    TagInputModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

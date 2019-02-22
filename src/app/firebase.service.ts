@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction} from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
+import { firestore } from 'firebase';
 
 type TagPath = string[];
 
@@ -40,8 +41,16 @@ export class FirebaseService {
 
   constructor(public db: AngularFirestore) { }
 
-  getNotes$(tags: TagPath[] = []): Observable<Note[]> {
-    return this.db.collection('notes').snapshotChanges().pipe(
+  buildReq = (tags: TagPath[]) => (ref: firestore.CollectionReference): firestore.Query => tags.reduce(
+    (acc: firestore.CollectionReference, path: TagPath) => {
+      const p = new firestore.FieldPath('tags', ...path);
+
+      return acc.where(p , '==', 'true');
+    }, ref
+  )
+
+  getNotes$(tags: TagPath[] = []) {
+    return this.db.collection('notes', this.buildReq(tags)).snapshotChanges().pipe(
       map(
         (data: DocumentChangeAction<{}>[]) => data.map(val => Note.fromRawData(val.payload.doc))
       )

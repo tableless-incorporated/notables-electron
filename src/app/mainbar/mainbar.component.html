@@ -2,9 +2,9 @@
   <button (click)="isEdit = !isEdit">Edit mode</button>
   <button (click)="onCreate()">+</button>
 
-  <ngx-md *ngIf="!isEdit && noteRef && note && note.body" [data]="note.body"></ngx-md>
+  <ngx-md *ngIf="!isEdit && note && note.body" [data]="note.body"></ngx-md>
 
-  <div *ngIf="isEdit && noteRef">
+  <div *ngIf="isEdit && note && note.id">
     <textarea [(ngModel)]="note.body"></textarea>
     <button (click)="onSave()">save</button>
   </div>

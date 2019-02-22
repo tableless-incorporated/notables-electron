@@ -1,5 +1,6 @@
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Note } from '../firebase.service';
 
 @Component({
   selector: 'app-mainbar',
@@ -10,35 +11,34 @@ export class MainbarComponent implements OnChanges {
   @Input() selectedNote: any;
 
   isEdit = false;
-  noteRef = null;
-  note = {
+  note: Note = {
+    id: null,
     body: ''
   };
 
   constructor(public db: AngularFirestore) { }
 
-  refUpdate(newRef) {
-    if (newRef) {
-      this.noteRef = newRef;
-      this.note = this.noteRef.data();
+  currentNoteChanged(newNote: Note) {
+    if (newNote) {
+      this.note = newNote;
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.refUpdate(changes.selectedNote.currentValue);
+    this.currentNoteChanged(changes.selectedNote.currentValue);
   }
 
   async onCreate() {
-    this.refUpdate(
+    this.currentNoteChanged(
       await (
         await this.db.collection('notes').add({})
-      ).get()
+      ).get().then(Note.fromRawData)
     );
     this.isEdit = true;
   }
 
   onSave() {
-    const note = this.db.doc<{body: string}>(`notes/${this.noteRef.id}`);
+    const note = this.db.doc<{body: string}>(`notes/${this.note.id}`);
     note.update({ body: this.note.body });
   }
 }

@@ -1,8 +1,7 @@
 import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Note } from '../firebase.service';
+import { Note, FirebaseService } from '../firebase.service';
 import { Observable, of, Subject, BehaviorSubject, from } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { pathOr } from 'ramda';
 
 @Component({
   selector: 'app-mainbar',
@@ -26,7 +25,7 @@ export class MainbarComponent implements OnChanges {
     console.dir($event);
   }
 
-  constructor(public db: AngularFirestore) { }
+  constructor(public firebaseService: FirebaseService) { }
 
   currentNoteChanged(newNote: Note) {
     if (newNote) {
@@ -43,7 +42,7 @@ export class MainbarComponent implements OnChanges {
   async onCreate() {
     this.currentNoteChanged(
       await (
-        await this.db.collection('notes').add({})
+        await this.firebaseService.createNote(new Note())
       ).get().then(Note.fromRawData)
     );
     this.isEdit = true;
@@ -51,8 +50,8 @@ export class MainbarComponent implements OnChanges {
 
   onSave() {
     if (!this.note.id) { return; }
-    const doc = this.db.doc<{body: string}>(`notes/${this.note.id}`);
-    doc.update({ body: this.note.body });
+    this.note.tags = this.noteTags.map(tag => pathOr(tag, ['value'], tag));
+    this.firebaseService.updateNote(this.note);
   }
 
   onDelete() {

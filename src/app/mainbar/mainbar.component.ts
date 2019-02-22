@@ -42,4 +42,10 @@ export class MainbarComponent implements OnChanges {
     const note = this.db.doc<{body: string}>(`notes/${this.note.id}`);
     note.update({ body: this.note.body });
   }
+
+  onDelete() {
+    if (!this.note.id) { return; }
+    this.firebaseService.deleteNote(this.note);
+    this.isNote = false;
+  }
 }

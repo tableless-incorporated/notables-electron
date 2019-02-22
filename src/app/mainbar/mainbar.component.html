@@ -3,6 +3,12 @@
   <button (click)="onCreate()">+</button>
   <button *ngIf="isNote" (click)="onDelete()">Delete</button>
 
+  <tag-input *ngIf="isNote" [(ngModel)]='noteTags' [onlyFromAutocomplete]="false">
+    <tag-input-dropdown [showDropdownIfEmpty]="true"
+      [autocompleteObservable]="requestAutocompleteItems">
+    </tag-input-dropdown>
+  </tag-input>
+
   <ngx-md *ngIf="!isEdit && note && note.body" [data]="note.body"></ngx-md>
 
   <div *ngIf="isEdit && note && note.id">

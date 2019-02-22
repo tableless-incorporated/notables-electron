@@ -18,7 +18,7 @@ export class MainbarComponent implements OnChanges {
   noteTags: string[] = [];
 
   public requestAutocompleteItems = (text: string): Observable<string[]> => {
-    return of(this.note.taglist);
+    return of(this.note.tags);
   }
 
   onTextChange($event: string) {

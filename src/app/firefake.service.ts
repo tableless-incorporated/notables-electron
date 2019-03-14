@@ -27,7 +27,7 @@ export class FirefakeService  extends ObjList<Note> implements DataService {
 
   constructor() {
     super([
-      new Note({  id: undefined,
+      new Note({  id: '0',
         body : `
 ## Ceci est un titre
 
@@ -39,7 +39,7 @@ Ceci est du texte
         `,
         tags: ['a/a', 'a/b', 'c', 'c/d']
       }),
-      ...range(1, 100).map(_ => new Note({  id: undefined,
+      ...range(1, 100).map((_, id) => new Note({  id: '' + (id + 1),
         body : `
 
 Aliquam vehicula, odio sed sodales dignissim, nulla lectus mattis sapien, quis scelerisque nunc nibh a elit. Praesent condimentum nisl eu massa convallis posuere. Quisque in dui consequat, vestibulum erat molestie, finibus tellus. Nunc pellentesque eros sit amet bibendum posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam tortor ante, fermentum sit amet quam ut, mattis mattis ipsum. Nulla et pharetra ante. Donec consectetur nisl quis dui accumsan, eu fermentum arcu fermentum. Etiam dictum ligula turpis, eget convallis nisi volutpat sit amet. Nunc pulvinar elit a nisl hendrerit, nec condimentum neque suscipit. Praesent et interdum mauris. Maecenas finibus nisi vitae leo accumsan ornare. Proin elementum, sem ut scelerisque lacinia, neque nisi ornare orci, nec suscipit velit dolor et nisl. Praesent interdum semper volutpat. Suspendisse facilisis ex turpis, ut euismod mi aliquam quis. Cras ultricies metus non ex molestie luctus.

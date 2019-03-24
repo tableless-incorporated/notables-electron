@@ -13,4 +13,8 @@ export class AppComponent {
 
   constructor(@Inject('DataService') public dataService: DataService, ) {
   }
+
+  login() {
+    this.dataService.login();
+  }
 }

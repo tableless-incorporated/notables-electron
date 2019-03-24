@@ -11,6 +11,8 @@ export interface DataService {
 
     tags$: Observable<string[]>;
 
+    user$: Observable<any>;
+
     // dataPresent$: Observable<boolean>;
     getNotes$(tags: TagPath[]): Observable<Note[]> ;
 
@@ -19,6 +21,8 @@ export interface DataService {
     deleteNote(note): void ;
 
     updateNote(note): void ;
+
+    login(): void;
 }
 
 @Injectable()
@@ -56,8 +60,6 @@ Ut dapibus odio nisl, non accumsan urna volutpat ut. Integer sit amet dignissim 
     ], 'id');
   }
 
-  user$ = of(true);
-
   get tags$() {
     return this.getNotes$([]).pipe(
       map( (listNote: Note[]): string[] => {
@@ -69,6 +71,7 @@ Ut dapibus odio nisl, non accumsan urna volutpat ut. Integer sit amet dignissim 
       }),
     );
   }
+  user$ = of({});
 
   getNotes$(tags: TagPath[] = []): Observable<Note[]> {
     return this.obs$;
@@ -104,4 +107,6 @@ Ut dapibus odio nisl, non accumsan urna volutpat ut. Integer sit amet dignissim 
       }
     );
   }
+
+  login() {}
 }

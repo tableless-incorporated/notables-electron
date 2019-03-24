@@ -1,0 +1,35 @@
+<mat-form-field class="example-chip-list" *ngIf="keywords$.obs$|async as keywords">
+  <mat-chip-list #chipList [selectable]="false">
+    <mat-chip
+      *ngFor="let keyword of keywords"
+      [selected]="false"
+      [removable]="removable"
+      (removed)="remove(keyword.id)"
+      click="onSelect(keyword.id)"
+      color="primary"
+      >
+      <mat-icon *ngIf="visibilityToggle" appMatChipPrevious (click)="toggleVisibility(keyword)">{{keyword.selected?"visibility":"visibility_off"}}</mat-icon>
+      &nbsp;{{keyword.name}}
+      <mat-icon matChipRemove *ngIf="removeButton!==false" disabled="removeButton==='disabled'">delete_outline</mat-icon>
+    </mat-chip>
+    <input #keywordInput
+      *ngIf="inputVisibilty"
+      mat-input
+      [placeholder]="placeholder"
+      (change)="inputvaluechange($event)"
+      [formControl]="keywordCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="addOnBlur"
+      (matChipInputTokenEnd)="add($event)">
+    <button mat-button *ngIf="dataToClear$|async" matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let keyword of filteredkeywords | async" [value]="keyword">
+      {{keyword}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

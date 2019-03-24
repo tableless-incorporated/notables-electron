@@ -1,18 +1,46 @@
-<div class="mainbar">
-  <button *ngIf="isNote" (click)="isEdit = !isEdit">Edit mode</button>
-  <button (click)="onCreate()">+</button>
-  <button *ngIf="isNote" (click)="onDelete()">Delete</button>
+<app-main-nav-bar (create)="onCreate()" (delete)="onDelete()"></app-main-nav-bar>
+<ng-container *ngIf="{
+  isEdit: isEdit$ | async,
+  isKeywords: (keywordService.obs$ | async)?.length > 0,
+  note: noteSelectedService.note$|async
+} as ctx" >
 
-  <tag-input *ngIf="isNote" [(ngModel)]='noteTags' [onlyFromAutocomplete]="false">
-    <tag-input-dropdown [showDropdownIfEmpty]="true"
-      [autocompleteObservable]="requestAutocompleteItems">
-    </tag-input-dropdown>
-  </tag-input>
-
-  <ngx-md *ngIf="!isEdit && note && note.body" [data]="note.body"></ngx-md>
-
-  <div *ngIf="isEdit && note && note.id">
-    <textarea [(ngModel)]="note.body"></textarea>
+  <app-search-input 
+    *ngIf="(noteSelectedService.note$|async) && (ctx.isKeywords || ctx.isEdit)" 
+    [keywords$]="keywordService" 
+    [suggestions]="tags"
+    [inputVisibilty]="ctx.isEdit" 
+    [removeButton]="ctx.isEdit"
+    [inputValue$]="searchInput$"
+    [add$]="add$" 
+    [remove$]="remove$" 
+    [reset$]="reset$"
+    placeholder="tags…"></app-search-input>
+  
+  <ngx-md *ngIf="!ctx.isEdit && ctx.note && ctx.note.body" [data]="ctx.note.body"></ngx-md>
+  <div *ngIf="!ctx.isEdit && ctx.note && ctx.note.id && (!ctx.note.body.trim().length)">Empty note!</div>
+  
+  <div *ngIf="ctx.isEdit && ctx.note && ctx.note.id">
+    <textarea class="note-edit" matInput cdkTextareaAutosize [(ngModel)]="ctx.note.body"></textarea>
     <button (click)="onSave()">save</button>
   </div>
-</div>
+
+  <ng-container *ngIf=" env.debug">
+      <br/>
+      <h4>Notes :</h4>{{notesService.getNotes$([])|async|json}}
+      <br/>
+      <h4>Context :</h4>{{ctx|json}}      
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="!(dataPresent$|async)" style="text-align: center">
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <h2>Uhh no notes!!!</h2>
+  <h3>If you want my opinion, you'd better click on that + button.</h3>
+  <h4>Yeah that's right the one just above!</h4>
+</ng-container>
+

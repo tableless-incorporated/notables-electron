@@ -1,0 +1,13 @@
+import { Injectable } from '@angular/core';
+import { ObjList } from 'storyx';
+
+export interface KeywordTerm { selected: boolean; name: string; id?: string; }
+
+@Injectable()
+export class SearchTermsService extends ObjList<KeywordTerm> {
+
+  constructor() {
+    super([], 'id');
+  }
+
+}

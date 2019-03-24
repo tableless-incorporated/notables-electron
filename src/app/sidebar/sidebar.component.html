@@ -1,11 +1,11 @@
-<div class="sidebar">
-  <span class='tag'>All Notes</span>
-  <span class='tag'>Notebooks</span>
-  <ul>
-    <li></li>
-  </ul>
-  <span class='tag'>Tags</span>
-
-  <app-tree-node *ngIf="(this.items$|async) as tags" [node]="tags"></app-tree-node>
-
-</div>
+<ng-container *ngIf="{ 
+    dataPresent: dataPresent$|async
+} as ctx; else loading">
+  <ng-container *ngIf="ctx.dataPresent">
+    <app-tags-list-menu-title></app-tags-list-menu-title>
+    <app-tree-tags [nodes$]="treeData$" (select)="onSelect($event)"></app-tree-tags>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+    loading
+</ng-template>

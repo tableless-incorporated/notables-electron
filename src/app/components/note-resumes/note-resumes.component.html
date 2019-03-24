@@ -1,0 +1,5 @@
+<app-list-notes [notes]="notes$|async">
+  <ng-template #templateRef let-note="note">
+    <app-note-title-card [selected]="note && currentlySelected && (note.id === currentlySelected.id)" (click)="onSelect(note)" [text]="note.title| md2txt | ltrim"></app-note-title-card>
+  </ng-template>
+</app-list-notes>

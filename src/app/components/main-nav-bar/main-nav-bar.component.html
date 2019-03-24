@@ -1,0 +1,3 @@
+<app-note-create-button (click)="onCreate()" ></app-note-create-button>
+<app-note-delete-button *ngIf="noteSelectedService.isNoteSelected$|async" (click)="onDelete()"></app-note-delete-button>
+<app-note-view-edit-toggle *ngIf="noteSelectedService.isNoteSelected$|async" (change)="changeEditMode($event)" [checked]="noteSelectedService.edit$|async"></app-note-view-edit-toggle>

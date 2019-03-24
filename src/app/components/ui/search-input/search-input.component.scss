@@ -1,0 +1,53 @@
+.example-chip-list {
+  width: 100%;
+}
+
+$mat-chip-vertical-padding: 7px;
+$mat-chip-horizontal-padding: 0px;
+
+$mat-chip-remove-vertical-padding: 0px;
+$mat-chip-remove-before-margin: 7px;
+$mat-chip-remove-after-padding: 7px;
+$mat-chip-remove-size: 18px;
+
+.mat-standard-chip {
+  color: #686868;
+  background-color: #eeeeee;
+}
+
+  .mat-chip-previous {
+    width: $mat-chip-remove-size;
+    height: $mat-chip-remove-size;
+    margin-right: 0;
+    margin-left: $mat-chip-horizontal-padding;
+
+    color: rgba(0,0,0,.87);
+    font-size: 18px;
+    opacity: .4;
+
+    [dir='rtl'] & {
+      margin-left: $mat-chip-horizontal-padding;
+      margin-right: 0;
+    }
+
+    padding-top: $mat-chip-remove-vertical-padding;
+    padding-bottom: $mat-chip-remove-vertical-padding;
+    padding-right: $mat-chip-remove-after-padding;
+    padding-left: $mat-chip-horizontal-padding;
+
+    [dir='rtl'] & {
+      padding-right: $mat-chip-remove-after-padding;
+      padding-left: $mat-chip-horizontal-padding;
+    }
+
+    cursor: pointer;
+
+    [dir='rtl'] & {
+      margin-right: $mat-chip-remove-before-margin;
+      margin-left: 0;
+    }
+  }
+
+.mat-chip-previous:hover {
+    opacity: .54;
+}

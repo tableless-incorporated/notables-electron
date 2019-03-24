@@ -1,48 +1,77 @@
-import { Component, OnInit } from '@angular/core';
-import { FirebaseService, Note } from '../firebase.service';
-import { Observable } from 'rxjs';
-import { map as rmap, uniq, reduce, compose, pluck , keys, flatten, lensPath, set} from 'ramda';
-import { map } from 'rxjs/operators';
-import { TreeNode } from './treenode.component';
+import { AfterViewChecked, Component, HostBinding, Inject, OnInit } from '@angular/core';
+import { compose, keys, lensPath, map as rmap, reduce, set } from 'ramda';
+import { Observable, of } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
+import { DataService } from '../firefake.service';
+import { SearchTermsService } from '../search-terms.service';
+
+export interface TreeNode {
+  name: string;
+  children?: TreeNode[];
+}
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements AfterViewChecked, OnInit {
 
-  items$: Observable<TreeNode>;
+  treeData$: Observable<TreeNode[]> = of([]);
+
+  @HostBinding('style.border-right') borderClass = '';
+  dataPresent$: Observable<boolean>;
 
   constructor(
-    public firebaseService: FirebaseService
-  ) { }
-
-  ngOnInit() {
-    this.items$ = this.firebaseService.getNotes$().pipe(
-      map( (listNote: Note[]): TreeNode => {
+    @Inject('DataService') public firebaseService: DataService,
+    public searchTermsService: SearchTermsService
+  ) {
+    this.treeData$ = this.firebaseService.tags$.pipe(
+      map( (listTags: string[]): TreeNode[] => {
         return compose(
           list => {
             const list2tree = tags => {
               return compose(
-                rmap((name: string) => ({
-                  name,
-                  children: list2tree(tags[name])
-                })),
+                rmap((name: string) => {
+                  const child = list2tree(tags[name]);
+                  const children = child.length ? child : undefined;
+                  return { name, children};
+                }),
                 keys,
               )(tags);
             };
-            return {
-              children: list2tree(list)
-            };
+            return  list2tree(list);
           },
           reduce((tags, tag) => set(lensPath(tag.split('/')), {}, tags), {}),
-          uniq,
-          flatten,
-          pluck('tags'),
-        )(listNote);
-      })
+        )(listTags);
+      }),
+      shareReplay() // needed since treeData is subscribed into an ngIf
     );
+
+    this.dataPresent$ = this.treeData$.pipe(
+      map(data => data.length > 0));
+
+  }
+
+  ngOnInit() {
+
+  }
+
+  ngAfterViewChecked() {
+    this.dataPresent$.pipe(
+    ).subscribe(dataPresent => {
+      if (dataPresent) {
+        this.borderClass = '1px solid #d8d8d8';
+      } else {
+        this.borderClass = '';
+      }
+    });
+  }
+
+  onSelect({path, selected}) {
+    //// this.tagsService.;
+    // this.tagSelectionService.select(path, selected);
+    this.searchTermsService.show(path);
   }
 }
 

@@ -1,62 +1,122 @@
-import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { Note, FirebaseService } from '../firebase.service';
-import { Observable, of, Subject, BehaviorSubject, from } from 'rxjs';
-import { pathOr } from 'ramda';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { compose, map as rmap, pathOr, pluck, propOr } from 'ramda';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
+import { ObjList } from 'storyx';
+import { environment } from '../../environments/environment';
+import { KeywordTerm } from '../components/ui/search-input/search-input.component';
+import { Note } from '../firebase.service';
+import { DataService } from '../firefake.service';
+import { NoteSelectedService } from '../note-selected.service';
 
 @Component({
   selector: 'app-mainbar',
   templateUrl: './mainbar.component.html',
   styleUrls: ['./mainbar.component.scss']
 })
-export class MainbarComponent implements OnChanges {
-  @Input() selectedNote: any;
+export class MainbarComponent implements OnInit , OnDestroy {
 
-  isEdit = false;
-  isNote = false;
+  constructor(
+    @Inject('DataService') public notesService: DataService,
+    public noteSelectedService: NoteSelectedService
+  ) {
+
+    this.notesService.tags$.pipe(
+      takeUntil(this.onDestroy$)
+    ).subscribe(tags => this.tags = tags);
+
+    this.remove$.subscribe(id => {
+      this.keywordService.removeById(id);
+    });
+
+    this.add$.subscribe((kw) => {
+      this.keywordService.add$(kw).subscribe();
+    });
+
+    this.reset$.subscribe(() => {
+      this.keywordService.update([]);
+      this.searchInput$.next('');
+    });
+  }
+  env = environment;
+  isEdit$: Observable<boolean>;
   note: Note = new Note();
 
-  noteTags: string[] = [];
+  onDestroy$ = new Subject<void>();
+
+  keywordService = new ObjList<KeywordTerm>([], 'id');
+
+  dataPresent$: Observable<boolean>;
+
+  searchInput$ = new BehaviorSubject<string>('');
+
+  remove$ = new Subject<string>();
+  add$ = new Subject<KeywordTerm>();
+  reset$ = new Subject<void>();
+
+  tags: string[];
 
   public requestAutocompleteItems = (text: string): Observable<string[]> => {
-    return of(this.note.tags);
+    return this.noteSelectedService.note$.pipe(pathOr([], 'tags'));
   }
 
-  onTextChange($event: string) {
-    console.dir($event);
+  ngOnInit() {
+    this.noteSelectedService.note$.pipe(
+      takeUntil(this.onDestroy$),
+    ).subscribe((note: Note) => {
+      this.note = note;
+
+      compose(
+        tags => this.keywordService.update(tags),
+        rmap(name => ({selected: true, name, id: name})),
+        propOr([], 'tags')
+      )(note);
+    });
+
+    this.isEdit$ = this.noteSelectedService.edit$;
+
+    this.dataPresent$ = this.notesService.getNotes$([]).pipe(map(data => data.length > 0));
   }
 
-  constructor(public firebaseService: FirebaseService) { }
-
-  currentNoteChanged(newNote: Note) {
-    if (newNote) {
-      this.note = newNote;
-      this.noteTags = newNote.tags;
-      this.isNote = true;
-    }
+  ngOnDestroy() {
+    this.onDestroy$.next();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.currentNoteChanged(changes.selectedNote.currentValue);
-  }
+   onCreate() {
+    this.notesService.getNotes$([]).pipe(
+      map(data => data.length),
+      take(1)
+    ).subscribe(
+      async nb => {
+        const note = new Note();
 
-  async onCreate() {
-    this.currentNoteChanged(
-      await (
-        await this.firebaseService.createNote(new Note())
-      ).get().then(Note.fromRawData)
+        note.body = '# Untitled note ' + (nb + 1);
+
+        const newNote = await this.notesService.createNote(note);
+
+        this.noteSelectedService.select(newNote);
+        this.noteSelectedService.setEditMode(true);
+      }
     );
-    this.isEdit = true;
   }
 
   onSave() {
     if (!this.note.id) { return; }
-    this.note.tags = this.noteTags.map(tag => pathOr(tag, ['value'], tag));
-    this.firebaseService.updateNote(this.note);
+    this.keywordService.obs$.pipe(
+      map(pluck('name')),
+      take(1),
+    ).subscribe(
+      (tags: string[]) => {
+        this.note.tags = tags;
+        this.notesService.updateNote(this.note);
+      }
+    );
+
   }
 
   onDelete() {
     if (!this.note.id) { return; }
-    this.firebaseService.deleteNote(this.note);
-    this.isNote = false;
+    this.notesService.deleteNote(this.note);
+    this.noteSelectedService.select(null);
   }
 }

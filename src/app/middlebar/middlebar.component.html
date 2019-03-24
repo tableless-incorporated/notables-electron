@@ -1,7 +1,9 @@
-<div class="middlebar">
-  <ul>
-    <li *ngFor="let item of items">
-      <button (click)="onSelect(item)">{{item.title | md2txt | ltrim}}</button>
-    </li>
-  </ul>
-</div>
+<ng-container *ngIf="dataPresent$|async">
+    <app-middle-nav-bar (search)="onSearchChange($event)" [searchInput$]="searchInput$"></app-middle-nav-bar>
+    <app-note-resumes [notes$]="notes$">
+    </app-note-resumes>
+    <ng-container *ngIf="env.debug">
+        <h4>Notes :</h4>{{notes$|async|json}}
+        <h4>DataPresent :</h4>{{dataPresent$|async|json}}
+    </ng-container>
+</ng-container>

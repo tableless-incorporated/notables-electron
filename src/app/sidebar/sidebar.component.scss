@@ -1,8 +1,15 @@
-.sidebar {
-  background-color: #333E45;
-  flex: 1 1 165px;
+:host {
+  background-color: #FFFFFF;
+  
+  display: flex;
+  flex-direction: column;
   min-width: 165px;
   max-width: 350px;
+  height: 100%;
+}
+
+.showBorder {
+  border-right: 1px solid #d8d8d8;
 }
 
 .sidebar .tag {

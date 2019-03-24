@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 })
 export class NoteDeleteButtonComponent implements OnInit {
   @Output() delete = new EventEmitter<void>();
+  @Input() size = 16;
 
   constructor(public dialog: MatDialog) { }
 

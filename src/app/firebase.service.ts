@@ -136,6 +136,10 @@ export class FirebaseService {
           provider: auth.GoogleAuthProvider.PROVIDER_ID,
           requireDisplayName: false
         },
+        {
+          provider: auth.EmailAuthProvider.PROVIDER_ID,
+
+        }
       ],
       callbacks: {
         signInSuccessWithAuthResult(authResult, redirectUrl) {

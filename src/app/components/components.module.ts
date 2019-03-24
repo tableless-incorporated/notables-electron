@@ -6,7 +6,6 @@ import { UiModule } from './ui/ui.module';
 import { AllNotesMenuTitleComponent } from './all-notes-menu-title/all-notes-menu-title.component';
 import { TagsListMenuTitleComponent } from './tags-list-menu-title/tags-list-menu-title.component';
 import { TagSelectedIconComponent } from './tag-selected-icon/tag-selected-icon.component';
-import { NoteResumeComponent } from './note-resume/note-resume.component';
 import { NoteResumesComponent } from './note-resumes/note-resumes.component';
 import { CustomPipesModule } from 'ngx-custom-pipes';
 import { Md2txtPipe } from './md2txt.pipe';
@@ -17,12 +16,12 @@ import { SearchInputComponent } from './ui/search-input/search-input.component';
 
 @NgModule({
   declarations: [AllNotesMenuTitleComponent, TagsListMenuTitleComponent,
-    TagSelectedIconComponent, NoteResumeComponent, NoteResumesComponent,
+    TagSelectedIconComponent, NoteResumesComponent,
     Md2txtPipe,
     MainNavBarComponent,
     MiddleNavBarComponent, ],
   exports: [AllNotesMenuTitleComponent, TagsListMenuTitleComponent,
-    TagSelectedIconComponent, NoteResumeComponent, NoteResumesComponent,
+    TagSelectedIconComponent, NoteResumesComponent,
     MainNavBarComponent, TreeTagsComponent,
     MiddleNavBarComponent, SearchInputComponent],
   imports: [
